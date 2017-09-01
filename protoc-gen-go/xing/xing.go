@@ -13,7 +13,7 @@ import (
 // Paths for packages used by code generated in this file,
 // relative to the import_prefix of the generator.Generator.
 const (
-	contextPkgPath = "golang.org/x/net/context"
+	contextPkgPath = "context"
 	clientPkgPath  = "github.com/wzhliang/xing"
 )
 
@@ -219,11 +219,11 @@ func (g *xing) generateClientMethod(reqServ, servName, serviceDescVar string, me
 	if !method.GetServerStreaming() && !method.GetClientStreaming() {
 		sync := outType != "Void"
 		if sync {
-			g.P(`_, out, err := c.c.Call(c.serviceName, "`, reqMethod, `", in, `, sync, ")")
+			g.P(`_, out, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
 			g.P("v := out.(*", outType, ")")
 			g.P("return v, err")
 		} else {
-			g.P(`_, _, err := c.c.Call(c.serviceName, "`, reqMethod, `", in, `, sync, ")")
+			g.P(`_, _, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
 			g.P("return nil, err")
 		}
 		g.P("}")
