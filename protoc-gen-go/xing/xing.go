@@ -220,6 +220,7 @@ func (g *xing) generateClientMethod(reqServ, servName, serviceDescVar string, me
 		sync := outType != "Void"
 		if sync {
 			g.P(`_, out, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
+			g.P("if out == nil { return nil, err}")
 			g.P("v := out.(*", outType, ")")
 			g.P("return v, err")
 		} else {
