@@ -172,7 +172,7 @@ func (g *xing) generateService(file *generator.FileDescriptor, service *pb.Servi
 	g.P()
 	// Server registration.
 	g.P("func Register", servName, "Handler(s *", clientPkg, ".Client, hdlr ", serverType, ") {")
-	g.P("s.NewHandler(hdlr)")
+	g.P("s.NewHandler(\"", servName, "\" , hdlr)")
 	g.P("}")
 	g.P()
 
@@ -210,7 +210,7 @@ func (g *xing) generateClientSignature(servName string, method *pb.MethodDescrip
 }
 
 func (g *xing) generateClientMethod(reqServ, servName, serviceDescVar string, method *pb.MethodDescriptorProto, descExpr string) {
-	reqMethod := method.GetName()
+	reqMethod := fmt.Sprintf("%s::%s", servName, method.GetName())
 	methName := generator.CamelCase(method.GetName())
 	inType := g.typeName(method.GetInputType())
 	outType := g.typeName(method.GetOutputType())
