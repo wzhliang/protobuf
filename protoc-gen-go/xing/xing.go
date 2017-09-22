@@ -71,7 +71,6 @@ func (g *xing) Generate(file *generator.FileDescriptor) {
 	}
 	g.P("// Reference imports to suppress errors if they are not otherwise used.")
 	g.P("var _ ", contextPkg, ".Context")
-	g.P("var _ ", clientPkg, ".Option")
 	g.P()
 
 	for i, service := range file.FileDescriptorProto.Service {
