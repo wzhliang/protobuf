@@ -121,7 +121,6 @@ func (g *xing) GenerateImports(file *generator.FileDescriptor) {
 	g.P("import (")
 	g.P(clientPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, clientPkgPath)))
 	g.P(contextPkg, " ", strconv.Quote(path.Join(g.gen.ImportPrefix, contextPkgPath)))
-	g.P(`"sync"`)
 	g.P(")")
 	g.P()
 }
@@ -161,7 +160,6 @@ func (g *xing) generateService(file *generator.FileDescriptor, service *pb.Servi
 	g.P("type ", unexport(servName), "Client struct {")
 	g.P("c *", clientPkg, ".Client")
 	g.P("serviceName string")
-	g.P("sync.Mutex")
 	g.P("}")
 	g.P()
 
@@ -255,16 +253,12 @@ func (g *xing) generateClientMethod(reqServ, servName, serviceDescVar string, me
 	if !method.GetServerStreaming() && !method.GetClientStreaming() {
 		sync := outType != "Void"
 		if sync {
-			g.P("c.Lock()")
 			g.P(`_, out, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
-			g.P("c.Unlock()")
 			g.P("if out == nil { return nil, err}")
 			g.P("v := out.(*", outType, ")")
 			g.P("return v, err")
 		} else {
-			g.P("c.Lock()")
 			g.P(`_, _, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
-			g.P("c.Unlock()")
 			g.P("return nil, err")
 		}
 		g.P("}")
