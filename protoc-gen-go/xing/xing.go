@@ -253,12 +253,12 @@ func (g *xing) generateClientMethod(reqServ, servName, serviceDescVar string, me
 	if !method.GetServerStreaming() && !method.GetClientStreaming() {
 		sync := outType != "Void"
 		if sync {
-			g.P(`_, out, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
+			g.P(`out, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
 			g.P("if out == nil { return nil, err}")
 			g.P("v := out.(*", outType, ")")
 			g.P("return v, err")
 		} else {
-			g.P(`_, _, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
+			g.P(`_, err := c.c.Call(ctx, c.serviceName, "`, reqMethod, `", in, `, sync, ")")
 			g.P("return nil, err")
 		}
 		g.P("}")
